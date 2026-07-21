@@ -1,43 +1,40 @@
 package com.company;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class t_person {
 
     private String nachname;
     private String vorname;
     private String geburtsdatum;
+    private LinkedHashMap<String, Integer> faecher = new LinkedHashMap<>();
 
-    private int englisch;
-    private int mathematik;
-    private int deutsch;
-    private int physik;
-    private int chemie;
+    public String getNachname()             { return nachname; }
+    public void   setNachname(String s)     { this.nachname = s; }
 
-    public String getNachname()            { return nachname; }
-    public void   setNachname(String s)    { this.nachname = s; }
+    public String getVorname()              { return vorname; }
+    public void   setVorname(String s)      { this.vorname = s; }
 
-    public String getVorname()             { return vorname; }
-    public void   setVorname(String s)     { this.vorname = s; }
+    public String getGeburtsdatum()         { return geburtsdatum; }
+    public void   setGeburtsdatum(String s) { this.geburtsdatum = s; }
 
-    public String getGeburtsdatum()        { return geburtsdatum; }
-    public void   setGeburtsdatum(String s){ this.geburtsdatum = s; }
+    public void addFach(String name, int note) {
+        faecher.put(name, note);
+    }
 
-    public int  getEnglisch()              { return englisch; }
-    public void setEnglisch(int n)         { this.englisch = n; }
-
-    public int  getMathematik()            { return mathematik; }
-    public void setMathematik(int n)       { this.mathematik = n; }
-
-    public int  getDeutsch()               { return deutsch; }
-    public void setDeutsch(int n)          { this.deutsch = n; }
-
-    public int  getPhysik()                { return physik; }
-    public void setPhysik(int n)           { this.physik = n; }
-
-    public int  getChemie()                { return chemie; }
-    public void setChemie(int n)           { this.chemie = n; }
-
+    public LinkedHashMap<String, Integer> getFaecher() {
+        return faecher;
+    }
 
     public double getSchnitt() {
-        return (englisch + mathematik + deutsch + physik + chemie) / 5.0;
+        if (faecher.isEmpty()) return 0.0;
+
+        int summe = 0;
+        for (int note : faecher.values()) {
+            summe += note;
+        }
+        return summe / (double) faecher.size();
     }
 
     public void printCertificate() {
@@ -53,24 +50,21 @@ public class t_person {
         System.out.println(line);
         System.out.println("FÄCHER & NOTEN");
         System.out.println(line2);
-        System.out.printf ("* %-20s  Note: %d%n", "Englisch",    englisch);
-        System.out.printf ("* %-20s  Note: %d%n", "Mathematik",  mathematik);
-        System.out.printf ("* %-20s  Note: %d%n", "Deutsch",     deutsch);
-        System.out.printf ("* %-20s  Note: %d%n", "Physik",      physik);
-        System.out.printf ("* %-20s  Note: %d%n", "Chemie",      chemie);
+        for (Map.Entry<String, Integer> eintrag : faecher.entrySet()) {
+            System.out.printf("* %-20s  Note: %d%n", eintrag.getKey(), eintrag.getValue());
+        }
         System.out.println(line2);
         System.out.printf ("Notendurchschnitt: %.2f%n", getSchnitt());
         System.out.println(line);
         System.out.println();
     }
 
-
     @Override
     public String toString() {
         return String.format(
-                "%-15s %-15s  Geb.: %-12s  |  Eng:%d  Mat:%d  Deu:%d  Phy:%d  Che:%d  |  Schnitt: %.2f",
+                "%-15s %-15s  Geb.: %-12s  |  Fächer: %d  |  Schnitt: %.2f",
                 nachname, vorname, geburtsdatum,
-                englisch, mathematik, deutsch, physik, chemie,
+                faecher.size(),
                 getSchnitt()
         );
     }

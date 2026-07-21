@@ -1,13 +1,13 @@
 package com.company;
+
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Main {
 
-
-    public static boolean        running  = true;
-    public static int            option   = 0;
-    public static Scanner        scanner  = new Scanner(System.in);
+    public static boolean running = true;
+    public static int option = 0;
+    public static Scanner scanner = new Scanner(System.in);
     public static LinkedList<t_person> zeugnisse = new LinkedList<>();
 
 
@@ -16,9 +16,9 @@ public class Main {
 
         while (running) {
             switch (printMenu()) {
-                case 1: add();           break;
-                case 2: delete();        break;
-                case 3: alleAnzeigen();  break;
+                case 1: add();          break;
+                case 2: delete();       break;
+                case 3: alleAnzeigen(); break;
                 case 4: printGoodbye(); running = false; break;
                 default:
                     System.out.println("Bitte geben Sie eine gültige Nummer (1–4) ein.");
@@ -80,11 +80,7 @@ public class Main {
 
         person.setGeburtsdatum(holeGueltigesDatum());
 
-        person.setEnglisch(  holeGueltigeNote("Englisch"));
-        person.setMathematik(holeGueltigeNote("Mathematik"));
-        person.setDeutsch(   holeGueltigeNote("Deutsch"));
-        person.setPhysik(    holeGueltigeNote("Physik"));
-        person.setChemie(    holeGueltigeNote("Chemie"));
+        holeFaecher(person);
 
         zeugnisse.add(person);
 
@@ -92,13 +88,37 @@ public class Main {
         person.printCertificate();
     }
 
-   
+    private static void holeFaecher(t_person person) {
+        System.out.println("\nGeben Sie nun die Fächer und Noten ein.");
+
+        while (true) {
+            System.out.print("Fach eingeben (oder 'fertig' um zu beenden): ");
+            String fach = scanner.nextLine().trim();
+
+            if (fach.equalsIgnoreCase("fertig")) {
+                if (person.getFaecher().isEmpty()) {
+                    System.out.println("Fehler: Bitte geben Sie mindestens ein Fach ein.");
+                    continue;
+                }
+                break;
+            }
+
+            if (fach.isEmpty()) {
+                System.out.println("Fehler: Fachname darf nicht leer sein.");
+                continue;
+            }
+
+            int note = holeGueltigeNote(fach);
+            person.addFach(fach, note);
+        }
+    }
+
+
     public static void delete() {
         if (zeugnisse.isEmpty()) {
             System.out.println("\nKeine Zeugnisse gespeichert – nichts zu löschen.");
             return;
         }
-
 
         System.out.println("\n=== Zeugnis löschen ===");
         printListe();
@@ -125,7 +145,6 @@ public class Main {
                 System.out.println("Fehler: Bitte eine gültige Zahl eingeben!");
             }
         }
-
 
         t_person toDelete = zeugnisse.get(choice - 1);
         System.out.printf("Wirklich löschen: %s %s? (j/n): ",
@@ -211,7 +230,7 @@ public class Main {
 
 
     public static int holeGueltigeNote(String fach) {
-        int note   = 0;
+        int note = 0;
         boolean ok = false;
 
         while (!ok) {
