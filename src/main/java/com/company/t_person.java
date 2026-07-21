@@ -1,3 +1,4 @@
+package com.company;
 public class t_person {
 
     private String nachname;
